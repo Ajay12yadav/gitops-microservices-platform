@@ -1,0 +1,17 @@
+# Node
+node_modules/
+npm-debug.log*
+
+# Secrets - never commit these
+.env
+.env.*
+*.pem
+*.key
+*secret*.yaml
+!**/templates/*secret*.yaml
+vault-keys*.json
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
