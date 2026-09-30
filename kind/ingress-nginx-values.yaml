@@ -1,0 +1,20 @@
+controller:
+  # Bind directly to ports 80/443 on the node
+  hostPort:
+    enabled: true
+  service:
+    type: NodePort
+  # Run only on the node we labeled and mapped ports for
+  nodeSelector:
+    ingress-ready: "true"
+  # The control-plane node is tainted, so allow scheduling there
+  tolerations:
+    - key: node-role.kubernetes.io/control-plane
+      operator: Equal
+      effect: NoSchedule
+  publishService:
+    enabled: false
+  watchIngressWithoutClass: true
+  extraArgs:
+    publish-status-address: localhost
+
