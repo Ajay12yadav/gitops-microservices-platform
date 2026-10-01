@@ -1,0 +1,12 @@
+dex:
+  enabled: false            # SSO not needed locally
+notifications:
+  enabled: false
+configs:
+  params:
+    server.insecure: true   # nginx handles routing; plain HTTP is fine locally
+server:
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    hostname: argocd.localtest.me
