@@ -3,3 +3,5 @@ autoscaling:
   maxReplicas: 10
 ingress:
   host: myapp.localtest.me
+serviceMonitor:
+  enabled: true
