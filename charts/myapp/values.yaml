@@ -39,3 +39,7 @@ serviceMonitor:
   interval: 15s
   labels:
     release: kube-prometheus-stack   # must match the Prometheus release name later
+
+
+grafanaDashboard:
+  enabled: false

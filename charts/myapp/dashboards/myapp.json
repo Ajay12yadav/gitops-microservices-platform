@@ -1,0 +1,80 @@
+{
+  "uid": "myapp-prod",
+  "title": "MyApp - Production Overview",
+  "tags": ["myapp", "gitops"],
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "10s",
+  "time": { "from": "now-30m", "to": "now" },
+  "panels": [
+    {
+      "id": 1, "type": "timeseries", "title": "Pod CPU usage vs limit (cores)",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "targets": [
+        { "refId": "A", "legendFormat": "usage {{pod}}",
+          "expr": "sum(rate(container_cpu_usage_seconds_total{namespace=\"production\",container=\"api\"}[2m])) by (pod)" },
+        { "refId": "B", "legendFormat": "limit {{pod}}",
+          "expr": "sum(kube_pod_container_resource_limits{namespace=\"production\",container=\"api\",resource=\"cpu\"}) by (pod)" }
+      ]
+    },
+    {
+      "id": 2, "type": "timeseries", "title": "Pod memory vs limit",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "bytes" }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "targets": [
+        { "refId": "A", "legendFormat": "usage {{pod}}",
+          "expr": "sum(container_memory_working_set_bytes{namespace=\"production\",container=\"api\"}) by (pod)" },
+        { "refId": "B", "legendFormat": "limit {{pod}}",
+          "expr": "sum(kube_pod_container_resource_limits{namespace=\"production\",container=\"api\",resource=\"memory\"}) by (pod)" }
+      ]
+    },
+    {
+      "id": 3, "type": "timeseries", "title": "HTTP request rate by status code (req/s)",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "reqps" }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+      "targets": [
+        { "refId": "A", "legendFormat": "{{status_code}}",
+          "expr": "sum(rate(http_requests_total{namespace=\"production\"}[1m])) by (status_code)" }
+      ]
+    },
+    {
+      "id": 4, "type": "timeseries", "title": "5xx error rate (req/s)",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "reqps", "color": { "mode": "fixed", "fixedColor": "red" } }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+      "targets": [
+        { "refId": "A", "legendFormat": "5xx",
+          "expr": "sum(rate(http_requests_total{namespace=\"production\",status_code=~\"5..\"}[1m]))" }
+      ]
+    },
+    {
+      "id": 5, "type": "timeseries", "title": "HPA replicas (current / desired / min / max)",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 16 },
+      "targets": [
+        { "refId": "A", "legendFormat": "current",
+          "expr": "kube_horizontalpodautoscaler_status_current_replicas{namespace=\"production\"}" },
+        { "refId": "B", "legendFormat": "desired",
+          "expr": "kube_horizontalpodautoscaler_status_desired_replicas{namespace=\"production\"}" },
+        { "refId": "C", "legendFormat": "min",
+          "expr": "kube_horizontalpodautoscaler_spec_min_replicas{namespace=\"production\"}" },
+        { "refId": "D", "legendFormat": "max",
+          "expr": "kube_horizontalpodautoscaler_spec_max_replicas{namespace=\"production\"}" }
+      ]
+    },
+    {
+      "id": 6, "type": "timeseries", "title": "p95 request latency",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "s" }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 16 },
+      "targets": [
+        { "refId": "A", "legendFormat": "p95",
+          "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{namespace=\"production\"}[2m])) by (le))" }
+      ]
+    }
+  ]
+}
