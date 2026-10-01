@@ -35,5 +35,16 @@ grafana:
     hosts:
       - grafana.localtest.me
   resources:
-    requests: { cpu: 50m, memory: 128Mi }
-    limits:   { memory: 384Mi }
+    requests: { cpu: 100m, memory: 256Mi }
+    limits:   { memory: 768Mi }
+  readinessProbe:
+    httpGet: { path: /api/health, port: 3000 }
+    timeoutSeconds: 5
+    periodSeconds: 10
+    failureThreshold: 6
+  livenessProbe:
+    httpGet: { path: /api/health, port: 3000 }
+    initialDelaySeconds: 60
+    timeoutSeconds: 10
+    periodSeconds: 20
+    failureThreshold: 10
