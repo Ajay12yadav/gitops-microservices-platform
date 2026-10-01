@@ -1,0 +1,5 @@
+autoscaling:
+  minReplicas: 2
+  maxReplicas: 10
+ingress:
+  host: myapp.localtest.me

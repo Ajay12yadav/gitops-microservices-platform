@@ -1,0 +1,41 @@
+replicaCount: 2
+
+image:
+  repository: ghcr.io/ajay12yadav/gitops-microservices-platform-api
+  tag: sha-30d83eb          # CI will bump this later
+  pullPolicy: IfNotPresent
+
+app:
+  port: 3000
+
+db:
+  name: appdb
+  existingSecret: myapp-db  # must contain DB_USER, DB_PASSWORD, MYSQL_ROOT_PASSWORD
+
+resources:
+  requests: { cpu: 100m, memory: 128Mi }
+  limits:   { cpu: 500m, memory: 256Mi }
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 70
+
+ingress:
+  enabled: true
+  className: nginx
+  host: myapp.localtest.me
+
+mysql:
+  image: mysql:8.0
+  storage: 2Gi
+  resources:
+    requests: { cpu: 100m, memory: 384Mi }
+    limits:   { cpu: 500m, memory: 1Gi }
+
+serviceMonitor:
+  enabled: false
+  interval: 15s
+  labels:
+    release: kube-prometheus-stack   # must match the Prometheus release name later
