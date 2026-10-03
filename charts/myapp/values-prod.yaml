@@ -8,3 +8,6 @@ serviceMonitor:
 
 grafanaDashboard:
   enabled: true
+
+externalSecrets:
+  enabled: true

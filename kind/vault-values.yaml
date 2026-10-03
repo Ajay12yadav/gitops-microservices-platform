@@ -1,0 +1,8 @@
+server:
+  dev:
+    enabled: true          # in-memory, auto-unsealed, root token "root"
+  resources:
+    requests: { cpu: 50m, memory: 128Mi }
+    limits:   { memory: 256Mi }
+injector:
+  enabled: false           # we use ESO, not sidecar injection, so save the RAM
