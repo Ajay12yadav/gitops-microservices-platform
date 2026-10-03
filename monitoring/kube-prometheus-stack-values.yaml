@@ -1,8 +1,5 @@
 alertmanager:
-  enabled: false           # we'll add alerting later if there's memory to spare
-
-# Kind runs these control-plane components bound to localhost, so Prometheus
-# can't scrape them and they'd show as permanently "down"
+  enabled: false
 kubeEtcd:
   enabled: false
 kubeScheduler:
@@ -11,17 +8,12 @@ kubeControllerManager:
   enabled: false
 kubeProxy:
   enabled: false
-
-# Node-exporter often fails on WSL2 + Kind (mount propagation) and we
-# don't need it: pod CPU/memory comes from cAdvisor instead
 nodeExporter:
   enabled: false
 
 prometheus:
   prometheusSpec:
     retention: 2d
-    # Scrape ANY ServiceMonitor, not only ones labelled with this release.
-    # Removes the classic "my app isn't being scraped" label trap.
     serviceMonitorSelectorNilUsesHelmValues: false
     podMonitorSelectorNilUsesHelmValues: false
     resources:
